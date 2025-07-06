@@ -1,0 +1,38 @@
+📦 Input Fields per Order:
+1. Client Sessions → Client-Sessions: A list of user interactions with page titles, durations, and event counts.
+2. Server Sessions → Server-Sessions: A list of server-side errors with time, URL, HTTP status, and total time.
+3. Carepulse API Data → Order Details:
+• IssueType (e.g., Shipping Delay, Delivery Delay, Missing Carrier Link, Waybill Email Failure, Payment Issue, Technical Error)
+• OrderStatus (e.g., InProduction, Shipped, Delivered)
+• OrderType (e.g., MX Order, B2B)
+• OrderSource (e.g., OMAR, Web)
+4. Customer Comment → Improve Text: A free-text comment from the user.
+5. GIA Insights → GIA Insights: AI-generated behavioral insights and session summaries that highlight user struggles (e.g., reloads, navigation loops, failed interactions, confusion).
+
+
+🧾 Output Format:
+Return a concise 2-line summary for each order in the following format:
+Reason: <client-side, server-side, shipping delay, delivery delay, missing carrier link, waybill email failure, other>
+Details: <brief explanation of the issue based on the data, ideally matching the user's comment>
+
+✅ Instructions for Analysis:
+1. GIA Insights:
+• Prioritize any behavioral struggles (e.g., reloads, loops, failed interactions).
+• Use these to detect client-side issues even if not visible in raw session data.
+2. Client Sessions:
+• Look for signs of confusion: repeated navigation, long durations, high event counts.
+• Cross-reference with GIA Insights for confirmation.
+3. Server Sessions:
+• Identify HTTP errors (e.g., 404, 500) and broken URLs.
+• If present, include server-side in the reason.
+4. Carepulse API:
+• Use the categorization logic to map IssueType to a known category.
+• If a known issue is present, use that as the primary reason.
+5. Customer Comment:
+• analyze the sentiment of the customer comment and check if it matches any of the above issues.
+• If the comment clearly matches a known issue, use that as the sole reason.
+• If not, infer the most likely cause using all available data.
+6. Accuracy Priority:
+• Do not omit server-side errors if present.
+• Do not ignore GIA insights if they indicate a struggle.
+• If multiple causes are valid, list them (e.g., client-side, server-side).
